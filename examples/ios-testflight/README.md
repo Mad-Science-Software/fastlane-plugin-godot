@@ -117,3 +117,4 @@ TestFlight (the phone app) only lists an app *after* its invite is accepted.
 | Exports abort with exit 134 after adding scripts | Stale import cache. `godot_export` runs `--import` first by default. |
 | Previous builds bloat every new export | Missing `.gdignore` in the output directory. See step 2. |
 | Uploaded build never appears for testers | Check the build's export-compliance question in App Store Connect, and remember invites must be accepted once per app. |
+| Post-upload email: `ITMS-90068: MinimumOSVersion too low` | Apple raises the floor over time (iOS 15.0 required from Spring 2027). Set `application/min_ios_version` in the export preset to at least the current requirement. |
