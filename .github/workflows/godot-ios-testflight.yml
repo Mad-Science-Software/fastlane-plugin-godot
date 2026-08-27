@@ -29,6 +29,10 @@ on:
       lane:
         type: string
         default: 'ios beta'
+      match-git-url:
+        description: 'Override the Matchfile git_url (use the ssh form with a deploy key)'
+        type: string
+        default: ''
     secrets:
       ASC_KEY_ID:
         required: true
@@ -39,6 +43,8 @@ on:
       MATCH_PASSWORD:
         required: false
       MATCH_GIT_BASIC_AUTHORIZATION:
+        required: false
+      MATCH_GIT_PRIVATE_KEY:
         required: false
 
 jobs:
@@ -67,10 +73,14 @@ jobs:
         env:
           ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}
       - name: Run lane
-        run: bundle exec fastlane ${{ inputs.lane }}
+        run: |
+          if [ -n "$MATCH_GIT_URL_INPUT" ]; then export MATCH_GIT_URL="$MATCH_GIT_URL_INPUT"; fi
+          bundle exec fastlane ${{ inputs.lane }}
         env:
+          MATCH_GIT_URL_INPUT: ${{ inputs.match-git-url }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_PATH: ~/.appstoreconnect/ci_key.p8
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
