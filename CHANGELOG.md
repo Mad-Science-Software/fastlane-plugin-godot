@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.0 (2026-08-27)
+
+Everything from the 0.1.1–0.1.5 development tags, published:
+
+- Version management: `godot_get_version` / `godot_set_version`
+  (cross-preset sync, semantic bumps, git-derived mode)
+- Engine resolution: project-declared version verification, binary
+  discovery beyond `PATH`, `godot_install_templates`
+- Android App Bundles: `install_android_build_template` option +
+  the `examples/android-play/` walkthrough
+- CI: reusable ios-testflight / android-play workflows, `docs/CI.md`
+- Godot 4.2–4.7 support enforced by a CI export matrix
+
 ## 0.1.5 (2026-08-26) — GitHub only, unreleased on RubyGems
 
 - Export smoke test now runs across a Godot version matrix — 4.2.2, 4.3.0,
