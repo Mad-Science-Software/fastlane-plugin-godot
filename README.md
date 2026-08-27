@@ -86,10 +86,9 @@ maps the exact error messages to fixes.
 
 ## Roadmap
 
-- RubyGems release
-- Android / Google Play example lane
-- Continuous Integration (CI) workflow templates (GitHub Actions)
-- Export-template installation action
+See [ROADMAP.md](ROADMAP.md) — next up: RubyGems release, version/build-number
+management actions, engine-version resolution, Android/Google Play, and
+Continuous Integration (CI) workflow templates.
 
 ## Development
 
