@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.2 (2026-08-27)
+
+Documentation release, after verifying the full CI pipeline live (a real
+game built and uploaded to TestFlight from a GitHub macOS runner):
+
+- `examples/ci-testflight-no-mac/` — project-agnostic walkthrough for
+  shipping to TestFlight from CI without owning a Mac: certificates repo +
+  `match`, read-only deploy key, repository secrets, a CI-safe
+  manual-signing Fastfile, and a copyable caller workflow.
+- `docs/CI.md` — two live-run lessons: OpenSSL-built empty-password `.p12`
+  files fail fresh-keychain import (export with Apple tooling instead),
+  and CI archives need manual signing with the match identity.
+- iOS reusable workflow accepts `MATCH_GIT_PRIVATE_KEY` (deploy-key
+  clones) and a `match-git-url` override.
+- README: RubyGems/CI badges and gem link.
+
 ## 0.2.1 (2026-08-27)
 
 First-hour fixes from a blind third-party usability test:
