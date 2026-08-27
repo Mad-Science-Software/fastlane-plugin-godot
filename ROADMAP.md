@@ -11,8 +11,15 @@ checklist is green and dogfooded against a real game.
 ## v0.1.0 — RubyGems release
 
 The Unity plugins earn ~90K installs largely on name and discoverability;
-`fastlane add_plugin godot` must work.
+`fastlane add_plugin godot` must work. **Gate: Android export verified
+first** — the first public impression must cover both mobile platforms, so
+the v0.4.0 Android-export checklist item (verify `godot_export` against
+Android presets) moves into this milestone; the Play-upload example and
+deep documentation stay in v0.4.0.
 
+- [x] `godot_export` verified against an Android preset (APK at minimum)
+      on a real game — Crunch, Godot 4.7.1: debug-signed arm64 APK,
+      targetSdk 36, via `godot_export(preset: 'Android', debug: true)`
 - [ ] Publish `fastlane-plugin-godot` to RubyGems
 - [ ] Tag releases; start a CHANGELOG
 - [ ] Switch README / example Pluginfile to the gem install
