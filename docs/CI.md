@@ -37,6 +37,24 @@ story compared to your laptop:
 3. **App Store Connect API key**: store the `.p8` file's *contents* as the
    `ASC_KEY_CONTENT` secret; the workflow writes it to disk and exports
    `ASC_KEY_PATH` for your lane.
+4. **Importing an existing identity into match? Export the `.p12` with
+   Apple's tooling, not OpenSSL.** A `.p12` built by `openssl pkcs12
+   -export` with an empty password fails on fresh CI keychains with
+   `SecKeychainItemImport: MAC verification failed during PKCS12 import` —
+   even though it imports fine on a Mac where the identity already exists
+   (which is exactly how the bug hides until your first CI run). Use
+   Keychain Access's export, or `security export -k login.keychain-db -t
+   identities -f pkcs12`, and verify with a throwaway keychain:
+   `security create-keychain -p x /tmp/t.db && security import your.p12
+   -k /tmp/t.db -P ''`.
+5. **Archive with manual signing on CI.** Godot's generated project
+   defaults to automatic signing, which needs a development identity and
+   an Xcode account session — neither exists on a runner. Point the archive
+   at what match installed instead:
+   `xcargs: 'CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="Apple Distribution"
+   DEVELOPMENT_TEAM=<team> PROVISIONING_PROFILE_SPECIFIER="<match profile>"'`
+   (the profile name comes from match's provisioning-profile mapping in the
+   lane context). This also supersedes the godot#110052 workaround.
 
 ## Android on a CI runner
 
