@@ -130,9 +130,11 @@ maps the exact error messages to fixes.
 
 ## Requirements
 
-- Godot 4.x available on the `PATH` (or via `godot_binary`)
+- Godot 4.2–4.7 (every version in that range is exercised by this
+  repository's CI export matrix on each push)
 - The engine version's export templates installed for your target platform
-- For iOS builds: macOS with Xcode
+  (`godot_install_templates` does this for you)
+- For iOS builds: macOS with Xcode; Android builds work on Linux too
 
 ## Roadmap
 

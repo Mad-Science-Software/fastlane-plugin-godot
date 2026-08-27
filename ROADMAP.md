@@ -90,7 +90,8 @@ the knowledge and examples are not.
 - Dogfooded against a shipping game before tagging
 - New export footguns get a diagnostic in the action *and* a row in the
   sharp-edges table
-- Godot 4.2+ supported; each release names the versions actually tested
+- Godot 4.2–4.7 exercised by the CI export matrix on every push (since
+  v0.1.5) — the supported-version claim is enforced, not asserted
 
 ## Parity scorecard vs unity_exporter
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.5 (2026-08-26) — GitHub only, unreleased on RubyGems
+
+- Export smoke test now runs across a Godot version matrix — 4.2.2, 4.3.0,
+  4.4.1, 4.5.1, 4.6.0, 4.7.1 — on every push; the README's
+  supported-version claim comes from this matrix. Local multi-version
+  checking via godot-ci Docker images documented in docs/CI.md.
+
 ## 0.1.4 (2026-08-26) — GitHub only, unreleased on RubyGems
 
 - Reusable GitHub Actions workflows callable from game repositories:
