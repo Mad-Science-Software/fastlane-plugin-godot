@@ -98,5 +98,5 @@ the knowledge and examples are not.
 | On RubyGems | ✅ | ❌ | v0.1.0 |
 | Version/build-number management | ✅ | ❌ | v0.2.0 |
 | Per-project engine resolution | ✅ (Unity Hub) | ⚠️ | v0.3.0 |
-| Android verified + documented | ✅ | ❌ | v0.4.0 |
+| Android verified + documented | ✅ | ⚠️ (verified; docs pending) | v0.4.0 |
 | Years of production soak | ✅ (through ~2020) | ❌ | earned, not built |
