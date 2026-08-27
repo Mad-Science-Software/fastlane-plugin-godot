@@ -1,9 +1,13 @@
 # fastlane-plugin-godot
 
+[![Gem Version](https://img.shields.io/gem/v/fastlane-plugin-godot)](https://rubygems.org/gems/fastlane-plugin-godot)
+[![CI](https://github.com/Mad-Science-Software/fastlane-plugin-godot/actions/workflows/test.yml/badge.svg)](https://github.com/Mad-Science-Software/fastlane-plugin-godot/actions/workflows/test.yml)
+
 A [fastlane](https://fastlane.tools) plugin for shipping [Godot Engine](https://godotengine.org)
 games to mobile app stores: headless exports with real diagnostics, composing
 with the fastlane actions (`gym`, `pilot`, `cert`, `sigh`, `supply`, …) that
-already handle signing and store upload.
+already handle signing and store upload. Published on RubyGems as
+[`fastlane-plugin-godot`](https://rubygems.org/gems/fastlane-plugin-godot).
 
 **New to fastlane?** Start with the from-zero walkthroughs — complete
 copy-paste setups including Ruby installation, credentials, Godot project
@@ -12,6 +16,9 @@ after):
 
 - [Godot → TestFlight (iOS)](examples/ios-testflight/)
 - [Godot → Google Play (Android)](examples/android-play/)
+- [Godot → TestFlight from CI, no Mac required](examples/ci-testflight-no-mac/)
+  — build on GitHub's macOS runners with `match`-based signing; develop on
+  Linux or Windows and still ship iOS
 
 **Already using fastlane?**
 

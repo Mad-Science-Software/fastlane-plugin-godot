@@ -1,0 +1,22 @@
+# Copy into your game repository at .github/workflows/godot-ios-beta.yml
+name: godot-ios-beta
+
+on:
+  workflow_dispatch:      # run from the Actions tab; or trigger on a release branch:
+  # push:
+  #   branches: [release]
+
+jobs:
+  beta:
+    uses: Mad-Science-Software/fastlane-plugin-godot/.github/workflows/godot-ios-testflight.yml@main
+    with:
+      project-dir: .                 # directory containing project.godot + Gemfile
+      godot-version: '4.7.1'         # match your project's engine version
+      lane: 'ios beta'
+      match-git-url: 'git@github.com:your-org/certificates.git'
+    secrets:
+      ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+      ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}

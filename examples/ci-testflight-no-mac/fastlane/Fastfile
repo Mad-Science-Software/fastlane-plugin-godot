@@ -1,0 +1,53 @@
+default_platform(:ios)
+
+platform :ios do
+  desc 'Export from Godot and build a signed .ipa (works locally and on CI)'
+  lane :build do
+    # On CI runners, create the throwaway keychain certificate import needs.
+    setup_ci if ENV['CI']
+
+    # Export first: it needs no credentials, so the Godot half of the
+    # pipeline is testable before an Apple developer account exists.
+    xcodeproj = godot_export(preset: 'iOS')
+
+    %w[ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_PATH].each do |name|
+      next unless ENV[name].to_s.strip.empty?
+      UI.user_error!("#{name} is not set. Copy fastlane/.env.template to fastlane/.env and fill in your App Store Connect API key.")
+    end
+
+    app_store_connect_api_key(
+      key_id: ENV.fetch('ASC_KEY_ID'),
+      issuer_id: ENV.fetch('ASC_ISSUER_ID'),
+      key_filepath: File.expand_path(ENV.fetch('ASC_KEY_PATH'))
+    )
+
+    # Signing identity + profile from the encrypted certificates repo —
+    # identical on your machine and on ephemeral CI runners.
+    match(type: 'appstore', readonly: true)
+
+    # Archive with manual signing using exactly what match installed: no
+    # development identity or Xcode account exists on a runner, and this
+    # also sidesteps godotengine/godot#110052 (Godot mixes a distribution
+    # identity into an automatic-signing config).
+    profile_mapping = lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING]
+    team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+    build_app(
+      project: xcodeproj,
+      scheme: File.basename(xcodeproj, '.xcodeproj'),
+      output_directory: 'build/ios',
+      export_method: 'app-store',
+      export_options: {
+        signingStyle: 'manual',
+        signingCertificate: 'Apple Distribution',
+        provisioningProfiles: profile_mapping
+      },
+      xcargs: "CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=\"Apple Distribution\" DEVELOPMENT_TEAM=#{team_id} PROVISIONING_PROFILE_SPECIFIER=\"#{profile_mapping.values.first}\""
+    )
+  end
+
+  desc 'Build and upload to TestFlight'
+  lane :beta do
+    build
+    upload_to_testflight
+  end
+end
