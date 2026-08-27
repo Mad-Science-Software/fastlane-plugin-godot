@@ -136,14 +136,18 @@ maps the exact error messages to fixes.
   (`godot_install_templates` does this for you)
 - For iOS builds: macOS with Xcode; Android builds work on Linux too
 
-## Roadmap
+## Project principles
 
-See [ROADMAP.md](ROADMAP.md). As of v0.2.0 the parity milestones are shipped:
-export + scaffolding + version management + engine/template resolution +
-Android App Bundles + reusable Continuous Integration (CI) workflows, with
-Godot 4.2–4.7 enforced by a CI export matrix. Next: deepening live-service
-verification (Play uploads, workflow adoption by real games) and whatever
-footguns issue reports surface.
+The original parity roadmap (vs the Unity fastlane plugins) completed with
+v0.2.1 — see the [CHANGELOG](CHANGELOG.md) for what shipped when. Ongoing
+direction comes from issue reports, held to three standing rules:
+
+- Every release is dogfooded against a shipping game before tagging.
+- Every newly discovered export footgun becomes a diagnostic in the action
+  *and* a row in a sharp-edges table.
+- Godot 4.2–4.7 support is enforced by the CI export matrix (Web exports
+  on every version, plus an Android APK export on a Linux runner) — the
+  supported-version claim is tested, not asserted.
 
 ## Development
 

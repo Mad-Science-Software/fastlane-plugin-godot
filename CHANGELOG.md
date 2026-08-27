@@ -18,6 +18,11 @@ First-hour fixes from a blind third-party usability test:
   (failures still raise with full output).
 - Docs: ETC2/ASTC and vendored-gems rows in the sharp-edges tables; stale
   README roadmap paragraph and parity table refreshed.
+- CI: Android APK export smoke test on a Linux runner (dogfooding the
+  docs/CI.md editor-settings + debug-keystore recipe) — Linux Android
+  builds are now verified, completing the parity roadmap; ROADMAP.md is
+  retired (its standing quality bar lives in the README, its history in
+  this changelog and git).
 
 ## 0.2.0 (2026-08-27)
 
