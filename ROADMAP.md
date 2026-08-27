@@ -75,13 +75,15 @@ the knowledge and examples are not.
 
 ## v0.5.0 — Continuous Integration templates
 
-- [ ] Reusable GitHub Actions workflow: release-branch pushes → TestFlight
-      / Play internal track (secrets: the three `ASC_*` values, keystore)
-- [ ] Documented macOS-runner recipe for iOS in CI (certificate handling
-      without fastlane match, and with it)
-- [ ] Export smoke test in this repo's own CI (headless export of a
-      fixture project via setup-godot) so engine upgrades can't silently
-      break us
+- [x] Reusable GitHub Actions workflows: `godot-ios-testflight.yml` and
+      `godot-android-play.yml`, callable via `uses:` (shipped v0.1.4;
+      documented in docs/CI.md, unverified against a live game repo until
+      a game adopts them — Crunch is the natural first consumer)
+- [x] Documented macOS-runner recipe for iOS in CI (docs/CI.md: setup_ci
+      keychain, match-vs-get_certificates trade-off) (shipped v0.1.4)
+- [x] Export smoke test in this repo's own CI (headless Web export of
+      spec/fixtures/smoke_project on Linux via setup-godot) (shipped
+      v0.1.4 — also the first Linux verification of godot_export)
 
 ## Quality bar (cross-cutting, every release)
 

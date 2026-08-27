@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.4 (2026-08-26) — GitHub only, unreleased on RubyGems
+
+- Reusable GitHub Actions workflows callable from game repositories:
+  `godot-ios-testflight.yml` (macOS → TestFlight) and
+  `godot-android-play.yml` (Linux → Play track), both installing Godot +
+  templates via setup-godot.
+- `docs/CI.md` — the CI signing recipe (temporary keychains via `setup_ci`,
+  why `match` beats `get_certificates` on ephemeral runners, secret layout).
+- Export smoke test in this repository's CI: headless Web export of a
+  fixture project on Linux — engine updates can't silently break the
+  export path, and `godot_export` is now Linux-verified.
+- Example and scaffolded Fastfiles call `setup_ci` when running in CI.
+
 ## 0.1.3 (2026-08-26) — GitHub only, unreleased on RubyGems
 
 - `godot_export` gains `install_android_build_template: true` for

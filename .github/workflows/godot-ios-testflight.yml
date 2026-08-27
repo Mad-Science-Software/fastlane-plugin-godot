@@ -1,0 +1,76 @@
+# Reusable workflow: Godot iOS build -> TestFlight.
+#
+# Call from your game repository:
+#
+#   jobs:
+#     beta:
+#       uses: Mad-Science-Software/fastlane-plugin-godot/.github/workflows/godot-ios-testflight.yml@main
+#       with:
+#         project-dir: .            # directory containing project.godot + Gemfile
+#         godot-version: '4.7.1'
+#       secrets:
+#         ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+#         ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+#         ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}   # raw contents of the .p8
+#
+# See docs/CI.md for the signing strategy this assumes (fastlane match
+# recommended for teams; MATCH_* secrets pass through when set).
+name: godot-ios-testflight
+
+on:
+  workflow_call:
+    inputs:
+      project-dir:
+        type: string
+        default: '.'
+      godot-version:
+        type: string
+        required: true
+      lane:
+        type: string
+        default: 'ios beta'
+    secrets:
+      ASC_KEY_ID:
+        required: true
+      ASC_ISSUER_ID:
+        required: true
+      ASC_KEY_CONTENT:
+        required: true
+      MATCH_PASSWORD:
+        required: false
+      MATCH_GIT_BASIC_AUTHORIZATION:
+        required: false
+
+jobs:
+  build-and-upload:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-dir }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler: latest
+          working-directory: ${{ inputs.project-dir }}
+          bundler-cache: true
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: ${{ inputs.godot-version }}
+          use-dotnet: false
+          include-templates: true
+      - name: Write App Store Connect API key
+        run: |
+          mkdir -p ~/.appstoreconnect
+          printf '%s' "$ASC_KEY_CONTENT" > ~/.appstoreconnect/ci_key.p8
+        env:
+          ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}
+      - name: Run lane
+        run: bundle exec fastlane ${{ inputs.lane }}
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_PATH: ~/.appstoreconnect/ci_key.p8
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}

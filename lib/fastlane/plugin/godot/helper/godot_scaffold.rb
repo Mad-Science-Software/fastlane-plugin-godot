@@ -32,6 +32,7 @@ module Fastlane
         platform :ios do
           desc 'Export from Godot and build a signed .ipa'
           lane :build do
+            setup_ci if ENV['CI']
             app_store_connect_api_key(
               key_id: ENV.fetch('ASC_KEY_ID'),
               issuer_id: ENV.fetch('ASC_ISSUER_ID'),

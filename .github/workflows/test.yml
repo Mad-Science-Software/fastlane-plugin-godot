@@ -20,3 +20,20 @@ jobs:
           bundler: latest
           bundler-cache: true
       - run: bundle exec rake
+
+  export-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler: latest
+          bundler-cache: true
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.7.1
+          use-dotnet: false
+          include-templates: true
+      - name: Headless export of the fixture project
+        run: bundle exec fastlane run godot_export preset:Web project_path:spec/fixtures/smoke_project

@@ -1,5 +1,8 @@
 *.gem
 Gemfile.lock
+spec/fixtures/smoke_project/build/*
+!spec/fixtures/smoke_project/build/.gdignore
+spec/fixtures/smoke_project/.godot/
 .bundle/
 vendor/bundle/
 fastlane/report.xml

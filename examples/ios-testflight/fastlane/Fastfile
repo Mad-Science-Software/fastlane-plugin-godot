@@ -3,6 +3,9 @@ default_platform(:ios)
 platform :ios do
   desc 'Export from Godot and build a signed .ipa'
   lane :build do
+    # On CI runners, create the throwaway keychain certificate import needs.
+    setup_ci if ENV['CI']
+
     # App Store Connect API key: drives certificate/profile management and
     # the TestFlight upload. No Apple ID login, no two-factor prompts, works
     # in Continuous Integration. See the example README for how to get one.

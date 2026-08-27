@@ -1,0 +1,76 @@
+# Reusable workflow: Godot Android App Bundle -> Google Play.
+#
+# Call from your game repository:
+#
+#   jobs:
+#     internal:
+#       uses: Mad-Science-Software/fastlane-plugin-godot/.github/workflows/godot-android-play.yml@main
+#       with:
+#         project-dir: .
+#         godot-version: '4.7.1'
+#       secrets:
+#         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}       # base64 of upload.keystore
+#         KEYSTORE_USER: ${{ secrets.KEYSTORE_USER }}
+#         KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+#         PLAY_JSON_KEY: ${{ secrets.PLAY_JSON_KEY }}           # service-account JSON contents
+name: godot-android-play
+
+on:
+  workflow_call:
+    inputs:
+      project-dir:
+        type: string
+        default: '.'
+      godot-version:
+        type: string
+        required: true
+      lane:
+        type: string
+        default: 'android internal'
+    secrets:
+      KEYSTORE_BASE64:
+        required: true
+      KEYSTORE_USER:
+        required: true
+      KEYSTORE_PASSWORD:
+        required: true
+      PLAY_JSON_KEY:
+        required: true
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.project-dir }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler: latest
+          working-directory: ${{ inputs.project-dir }}
+          bundler-cache: true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: ${{ inputs.godot-version }}
+          use-dotnet: false
+          include-templates: true
+      - name: Write signing material
+        run: |
+          printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
+          printf '%s' "$PLAY_JSON_KEY" > "$RUNNER_TEMP/play-key.json"
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          PLAY_JSON_KEY: ${{ secrets.PLAY_JSON_KEY }}
+      - name: Run lane
+        run: bundle exec fastlane ${{ inputs.lane }}
+        env:
+          GODOT_ANDROID_KEYSTORE_RELEASE_PATH: ${{ runner.temp }}/upload.keystore
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: ${{ secrets.KEYSTORE_USER }}
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          PLAY_JSON_KEY_PATH: ${{ runner.temp }}/play-key.json
