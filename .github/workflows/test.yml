@@ -41,3 +41,40 @@ jobs:
           include-templates: true
       - name: Headless export of the fixture project
         run: bundle exec fastlane run godot_export preset:Web project_path:spec/fixtures/smoke_project
+
+  android-linux-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler: latest
+          bundler-cache: true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: chickensoft-games/setup-godot@v2
+        with:
+          version: 4.7.1
+          use-dotnet: false
+          include-templates: true
+      - name: Configure Godot Android editor settings + debug keystore
+        run: |
+          keytool -genkeypair -keystore "$HOME/debug.keystore" -storepass android \
+            -keypass android -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" \
+            -keyalg RSA -validity 10000
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.7.tres" <<SETTINGS
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/java_sdk_path = "$JAVA_HOME"
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          export/android/debug_keystore = "$HOME/debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
+          SETTINGS
+      - name: Headless Android APK export on Linux
+        run: bundle exec fastlane run godot_export preset:Android debug:true project_path:spec/fixtures/smoke_project
