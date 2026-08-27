@@ -11,11 +11,10 @@ complete copy-paste setup including Ruby installation, the App Store Connect
 API key, Godot project prep, and a working Fastfile. First setup ~30 minutes;
 ~4 minutes per release after that.
 
-**Already using fastlane?** Install from git (RubyGems release coming):
+**Already using fastlane?**
 
-```ruby
-# fastlane/Pluginfile
-gem 'fastlane-plugin-godot', git: 'https://github.com/Mad-Science-Software/fastlane-plugin-godot'
+```bash
+fastlane add_plugin godot
 ```
 
 ## Actions

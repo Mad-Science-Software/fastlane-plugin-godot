@@ -15,7 +15,7 @@ module Fastlane
       RUBY
 
       PLUGINFILE = <<~RUBY.freeze
-        gem 'fastlane-plugin-godot', git: 'https://github.com/Mad-Science-Software/fastlane-plugin-godot'
+        gem 'fastlane-plugin-godot'
       RUBY
 
       APPFILE = <<~RUBY.freeze

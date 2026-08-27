@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: New footgun report
+    url: https://github.com/Mad-Science-Software/fastlane-plugin-godot/issues/new
+    about: Found a Godot export failure mode this plugin doesn't diagnose? File it — turning footguns into diagnostics is the roadmap's quality bar.
