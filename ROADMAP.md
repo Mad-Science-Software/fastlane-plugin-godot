@@ -46,15 +46,16 @@ unity_exporter's headline feature, and the piece our own pipeline wants
 unity_exporter resolves the right Unity editor per-project via Unity Hub.
 Godot has no Hub, but the project declares its version — use it.
 
-- [ ] Read the project's engine version from `project.godot`
+- [x] Read the project's engine version from `project.godot`
       (`config/features`) and fail loudly when the resolved `godot` binary
-      doesn't match, with guidance
-- [ ] `godot_install_templates` — download the matching export-template
-      archive and unpack only the platform needed (CI-friendly; the
-      Chickensoft `setup-godot` action covers GitHub Actions, this covers
-      everywhere else)
-- [ ] Binary discovery beyond `PATH`: common install locations, an optional
-      version-manager hook
+      doesn't match, with guidance (shipped v0.1.2; `skip_version_check`
+      overrides)
+- [x] `godot_install_templates` — download the matching export-template
+      archive and unpack only the platform needed (shipped v0.1.2;
+      stable releases only, prereleases refused with guidance)
+- [x] Binary discovery beyond `PATH`: common install locations + `GODOT`
+      environment variable (shipped v0.1.2; version-manager hook deferred
+      until a version manager is worth blessing)
 
 ## v0.4.0 — Android / Google Play
 

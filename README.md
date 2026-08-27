@@ -86,6 +86,25 @@ Every option is also settable via environment variable (`FL_GODOT_*`).
 Returns the absolute artifact path (for iOS presets, the generated Xcode
 project) and sets `lane_context[:GODOT_EXPORT_OUTPUT]`.
 
+`godot_export` also resolves and sanity-checks the engine: when `godot`
+isn't on the `PATH` it looks in common install locations and the `GODOT`
+environment variable, and it refuses to export when the binary's version
+doesn't match the engine version the project declares in
+`config/features` (cross-version exports corrupt import caches) —
+`skip_version_check: true` overrides.
+
+### godot_install_templates
+
+Downloads and installs the export templates matching your Godot binary's
+version — one platform's worth or everything:
+
+```ruby
+godot_install_templates(platform: 'iOS')   # or Android, macOS, Web, all
+```
+
+Skips work when the templates are already present, so it's safe to leave
+at the top of a lane as a CI bootstrap.
+
 ## The iOS signing story (read this once)
 
 Godot generates a fresh Xcode project on every export, with two properties

@@ -6,14 +6,15 @@ module Fastlane
   module Actions
     class GodotExportAction < Action
       def self.run(params)
-        godot = params[:godot_binary]
         project_path = File.expand_path(params[:project_path])
         preset_name = params[:preset]
 
         UI.user_error!("No project.godot in #{project_path}") unless File.exist?(File.join(project_path, 'project.godot'))
 
+        godot = Helper::GodotHelper.discover_godot_binary(params[:godot_binary])
         version = Helper::GodotHelper.godot_version(godot)
         UI.message("Godot #{version}")
+        Helper::GodotHelper.verify_binary_matches_project!(version, project_path) unless params[:skip_version_check]
 
         cfg_path = File.join(project_path, 'export_presets.cfg')
         preset = Helper::GodotHelper.find_preset(cfg_path, preset_name)
@@ -100,6 +101,11 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :verbose,
                                        env_name: 'FL_GODOT_VERBOSE',
                                        description: 'Pass --verbose to Godot',
+                                       type: Boolean,
+                                       default_value: false),
+          FastlaneCore::ConfigItem.new(key: :skip_version_check,
+                                       env_name: 'FL_GODOT_SKIP_VERSION_CHECK',
+                                       description: "Skip verifying the binary's version against the project's declared engine version",
                                        type: Boolean,
                                        default_value: false)
         ]

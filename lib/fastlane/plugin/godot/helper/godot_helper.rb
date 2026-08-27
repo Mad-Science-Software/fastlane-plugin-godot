@@ -72,6 +72,58 @@ module Fastlane
         'Web' => ['web_release.zip', 'web_debug.zip']
       }.freeze
 
+      # The engine version a project declares, e.g. "4.7" from
+      # config/features=PackedStringArray("4.7", "GL Compatibility")
+      def self.project_feature_version(project_path)
+        project_file = File.join(project_path, 'project.godot')
+        return nil unless File.exist?(project_file)
+        File.foreach(project_file) do |line|
+          match = line.match(/^config\/features=PackedStringArray\((.*)\)/)
+          next unless match
+          feature = match[1].scan(/"([^"]+)"/).flatten.find { |f| f.match?(/\A\d+\.\d+\z/) }
+          return feature
+        end
+        nil
+      end
+
+      def self.verify_binary_matches_project!(version_string, project_path)
+        declared = project_feature_version(project_path)
+        return if declared.nil?
+        binary_minor = version_string.split('.')[0, 2].join('.')
+        return if binary_minor == declared
+        UI.user_error!(
+          "This project declares Godot #{declared} (config/features in project.godot) " \
+          "but the resolved binary is #{template_directory_name(version_string)}. " \
+          'Exporting across engine versions corrupts import caches and breaks scenes. ' \
+          "Point godot_binary at a Godot #{declared} install, or pass skip_version_check: true if you know what you are doing"
+        )
+      end
+
+      # Where the godot binary lives when it isn't simply on the PATH.
+      COMMON_BINARY_LOCATIONS = [
+        '/Applications/Godot.app/Contents/MacOS/Godot',
+        '/opt/homebrew/bin/godot',
+        '/usr/local/bin/godot',
+        '/usr/bin/godot'
+      ].freeze
+
+      def self.discover_godot_binary(configured)
+        return configured unless configured == 'godot'
+        return configured unless `which godot 2>/dev/null`.strip.empty?
+        found = ENV['GODOT'] || COMMON_BINARY_LOCATIONS.find { |path| File.executable?(path) }
+        UI.user_error!("Could not find a Godot binary — none on the PATH, no GODOT environment variable, and nothing at: #{COMMON_BINARY_LOCATIONS.join(', ')}") unless found
+        UI.message("Using Godot binary at #{found}")
+        found
+      end
+
+      # Official export-templates archive for a stable version string.
+      def self.template_download_url(version_string)
+        release = template_directory_name(version_string)
+        UI.user_error!("Only stable releases have predictable template downloads (got '#{release}') — install templates for prereleases manually") unless release.end_with?('.stable')
+        base = release.sub(/\.stable\z/, '')
+        "https://github.com/godotengine/godot/releases/download/#{base}-stable/Godot_v#{base}-stable_export_templates.tpz"
+      end
+
       def self.verify_templates!(version_string, platform)
         dir = File.join(templates_root, template_directory_name(version_string))
         needed = PLATFORM_TEMPLATE_FILES[platform]
