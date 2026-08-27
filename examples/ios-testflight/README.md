@@ -69,15 +69,19 @@ Four things iOS export requires that a desktop-focused project may lack:
 ## 3. Install fastlane + this plugin (one time)
 
 From your game project's directory, copy this example's `Gemfile` and
-`fastlane/` directory (`Fastfile`, `Appfile`, `Pluginfile`), edit the
-`Appfile` values, then:
+`fastlane/Pluginfile`, then:
 
 ```bash
 bundle install
+bundle exec fastlane run godot_init
 ```
 
-That is the entire fastlane installation — `bundle` reads the `Gemfile`,
-installs fastlane and this plugin, done.
+`godot_init` scaffolds everything else from step 2 and this directory —
+the `Fastfile`, `Appfile`, `.env.template`, an iOS + Android
+`export_presets.cfg`, the `build/.gdignore`, a placeholder app icon, and a
+`.gitignore` — skipping any file you already have. It ends by listing the
+placeholders to fill in (bundle identifier, team ID, API key). Prefer doing
+it by hand? Copy this example's files instead; they're the same templates.
 
 ## 4. Register the app (one time)
 

@@ -20,6 +20,24 @@ gem 'fastlane-plugin-godot', git: 'https://github.com/Mad-Science-Software/fastl
 
 ## Actions
 
+### godot_init
+
+Scaffolds everything a Godot project needs for mobile releases — run once
+from the project directory:
+
+```bash
+bundle exec fastlane run godot_init
+```
+
+Creates (only when missing — existing files are never touched): `Gemfile`,
+`fastlane/{Pluginfile,Appfile,Fastfile,.env.template}`, an
+`export_presets.cfg` with iOS + Android presets, `build/.gdignore` (so Godot
+doesn't import its own build products), a placeholder 1024×1024 `app_icon.png`
+(iOS export hard-fails without an icon; pass `icon:false` to skip), and a
+`.gitignore` (or a warning listing entries yours is missing). Finishes by
+listing the placeholders you must fill in: bundle identifier, team ID, and
+your App Store Connect API key in `fastlane/.env`.
+
 ### godot_export
 
 Exports a Godot project headlessly using a named export preset from
