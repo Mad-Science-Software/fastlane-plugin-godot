@@ -146,7 +146,12 @@ maps the exact error messages to fixes.
   repository's CI export matrix on each push)
 - The engine version's export templates installed for your target platform
   (`godot_install_templates` does this for you)
-- For iOS builds: macOS with Xcode; Android builds work on Linux too
+- iOS signing and packaging (the `build_app` step) needs macOS with Xcode
+  **on the machine running that step** — which can be a CI runner instead
+  of anything you own: see
+  [shipping to TestFlight without a Mac](examples/ci-testflight-no-mac/).
+  The export itself (`godot_export`, including generating the iOS Xcode
+  project) and all Android builds run fine on Linux.
 
 ## Project principles
 
