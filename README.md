@@ -37,6 +37,18 @@ doesn't import its own build products), a placeholder 1024×1024 `app_icon.png`
 listing the placeholders you must fill in: bundle identifier, team ID, and
 your App Store Connect API key in `fastlane/.env`.
 
+### godot_get_version / godot_set_version
+
+Read and write the version name + build number in `export_presets.cfg`,
+keeping iOS (`short_version`/`version`) and Android (`version/name`/
+`version/code`) in sync across every preset:
+
+```ruby
+godot_set_version(version: 'patch', build_number: 'increment')
+godot_set_version(from_git: true)   # version from latest tag, build from commit count
+godot_get_version                    # => { version_name: '1.2.0', version_code: 42 }
+```
+
 ### godot_export
 
 Exports a Godot project headlessly using a named export preset from

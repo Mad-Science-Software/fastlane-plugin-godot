@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 (2026-08-26) — GitHub only, unreleased on RubyGems
+
+- `godot_get_version` / `godot_set_version` — read and write version name +
+  build number across every preset in `export_presets.cfg`, keeping iOS
+  (`application/short_version` / `application/version`) and Android
+  (`version/name` / `version/code`) in sync. Supports explicit values,
+  semantic bumps (`major`/`minor`/`patch`), `build_number: 'increment'`,
+  and `from_git: true` (version from the latest tag, build number from the
+  commit count).
+
 ## 0.1.0 (2026-08-26)
 
 Initial release.

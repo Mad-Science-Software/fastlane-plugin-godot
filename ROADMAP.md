@@ -31,14 +31,14 @@ deep documentation stay in v0.4.0.
 unity_exporter's headline feature, and the piece our own pipeline wants
 (versions derived from git tags, never hand-bumped).
 
-- [ ] `godot_get_version` — read `application/short_version` /
-      `application/version` from a preset
-- [ ] `godot_set_version` — write them; semantic increments
-      (`major`/`minor`/`patch`) and explicit values; keep iOS
-      version/build and (later) Android version/code in sync across presets
-- [ ] Git-derived mode: version from the latest tag, build number from
-      commit count or a CI run number
-- [ ] Works as a plain action so any lane can compose it (bump → export →
+- [x] `godot_get_version` — read `application/short_version` /
+      `application/version` from a preset (shipped v0.1.1)
+- [x] `godot_set_version` — write them; semantic increments
+      (`major`/`minor`/`patch`) and explicit values; iOS version/build and
+      Android version/code kept in sync across presets (shipped v0.1.1)
+- [x] Git-derived mode: version from the latest tag, build number from
+      commit count (shipped v0.1.1)
+- [x] Works as a plain action so any lane can compose it (bump → export →
       upload)
 
 ## v0.3.0 — Engine & template resolution
