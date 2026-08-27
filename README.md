@@ -6,8 +6,13 @@
 A [fastlane](https://fastlane.tools) plugin for shipping [Godot Engine](https://godotengine.org)
 games to mobile app stores: headless exports with real diagnostics, composing
 with the fastlane actions (`gym`, `pilot`, `cert`, `sigh`, `supply`, …) that
-already handle signing and store upload. Published on RubyGems as
-[`fastlane-plugin-godot`](https://rubygems.org/gems/fastlane-plugin-godot).
+already handle signing and store upload.
+
+Published on RubyGems as
+[`fastlane-plugin-godot`](https://rubygems.org/gems/fastlane-plugin-godot) ·
+source, examples, walkthroughs, and issues live at
+[github.com/Mad-Science-Software/fastlane-plugin-godot](https://github.com/Mad-Science-Software/fastlane-plugin-godot)
+(the `examples/` links below are relative — browse them there).
 
 **New to fastlane?** Start with the from-zero walkthroughs — complete
 copy-paste setups including Ruby installation, credentials, Godot project
