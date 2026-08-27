@@ -1,0 +1,3 @@
+# Once fastlane-plugin-godot is on RubyGems this becomes:
+#   gem 'fastlane-plugin-godot'
+gem 'fastlane-plugin-godot', git: 'https://github.com/Mad-Science-Software/fastlane-plugin-godot'

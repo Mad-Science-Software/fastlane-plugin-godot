@@ -1,0 +1,49 @@
+default_platform(:ios)
+
+platform :ios do
+  desc 'Export from Godot and build a signed .ipa'
+  lane :build do
+    # App Store Connect API key: drives certificate/profile management and
+    # the TestFlight upload. No Apple ID login, no two-factor prompts, works
+    # in Continuous Integration. See the example README for how to get one.
+    app_store_connect_api_key(
+      key_id: ENV.fetch('ASC_KEY_ID'),
+      issuer_id: ENV.fetch('ASC_ISSUER_ID'),
+      key_filepath: File.expand_path(ENV.fetch('ASC_KEY_PATH'))
+    )
+
+    xcodeproj = godot_export(preset: 'iOS')
+
+    # Reuse-or-create the Apple Distribution certificate and App Store
+    # provisioning profile. Idempotent; classic (non-cloud) signing, which
+    # works with an App Manager API key.
+    get_certificates
+    get_provisioning_profile
+
+    build_app(
+      project: xcodeproj,
+      # Godot names the Xcode scheme after the exported project.
+      scheme: File.basename(xcodeproj, '.xcodeproj'),
+      output_directory: 'build/ios',
+      export_method: 'app-store',
+      export_options: {
+        signingStyle: 'manual',
+        signingCertificate: 'Apple Distribution',
+        provisioningProfiles: {
+          CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier) =>
+            lane_context[SharedValues::SIGH_NAME]
+        }
+      },
+      # Godot writes CODE_SIGN_IDENTITY="Apple Distribution" into a config
+      # that uses automatic signing (godotengine/godot#110052); archive with
+      # the development identity and let the export step re-sign.
+      xcargs: 'CODE_SIGN_IDENTITY="Apple Development" -allowProvisioningUpdates'
+    )
+  end
+
+  desc 'Build and upload to TestFlight'
+  lane :beta do
+    build
+    upload_to_testflight
+  end
+end

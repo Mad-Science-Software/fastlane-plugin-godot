@@ -1,0 +1,5 @@
+# Your game's bundle identifier (must match the export preset).
+app_identifier('com.yourstudio.yourgame')
+
+# Your 10-character Apple Developer team ID.
+team_id('ABCDE12345')
