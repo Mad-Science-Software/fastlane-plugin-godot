@@ -22,6 +22,10 @@ jobs:
       - run: bundle exec rake
 
   export-smoke:
+    strategy:
+      fail-fast: false
+      matrix:
+        godot: ['4.2.2', '4.3.0', '4.4.1', '4.5.1', '4.6.0', '4.7.1']
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +36,7 @@ jobs:
           bundler-cache: true
       - uses: chickensoft-games/setup-godot@v2
         with:
-          version: 4.7.1
+          version: ${{ matrix.godot }}
           use-dotnet: false
           include-templates: true
       - name: Headless export of the fixture project

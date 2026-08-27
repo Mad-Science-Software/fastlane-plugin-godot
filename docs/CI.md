@@ -52,9 +52,23 @@ Gradle export will fail without them; add a pre-step writing
 `~/.config/godot/editor_settings-4.<minor>.tres` if you hit it (and open an
 issue — making the plugin handle this is on the roadmap).
 
-## The plugin's own smoke test
+## The plugin's own smoke test — a Godot version matrix
 
 This repository's CI runs a headless Web export of
-`spec/fixtures/smoke_project` on every push (Linux runner) — proving the
-export path end to end against a real engine download, so engine updates
-can't silently break the plugin.
+`spec/fixtures/smoke_project` on every push, across a matrix of Godot
+versions (currently 4.2.2 through 4.7.1, Linux runners) — proving the
+export path end to end against real engine downloads. The README's
+supported-version claim comes from this matrix, not hand-testing.
+
+For a quick local check against any engine version without installing it,
+the [godot-ci Docker images](https://github.com/abarichello/godot-ci)
+bundle the engine and its export templates:
+
+```bash
+docker run --rm -v "$PWD/spec/fixtures/smoke_project:/project" \
+  barichello/godot-ci:4.2.2 sh -c \
+  "mkdir -p /project/build/web && godot --headless --path /project \
+   --export-release Web /project/build/web/index.html"
+```
+
+(On Apple Silicon the images run under amd64 emulation — slower, works.)
