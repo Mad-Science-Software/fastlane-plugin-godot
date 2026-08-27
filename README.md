@@ -138,9 +138,12 @@ maps the exact error messages to fixes.
 
 ## Roadmap
 
-See [ROADMAP.md](ROADMAP.md) — next up: RubyGems release, version/build-number
-management actions, engine-version resolution, Android/Google Play, and
-Continuous Integration (CI) workflow templates.
+See [ROADMAP.md](ROADMAP.md). As of v0.2.0 the parity milestones are shipped:
+export + scaffolding + version management + engine/template resolution +
+Android App Bundles + reusable Continuous Integration (CI) workflows, with
+Godot 4.2–4.7 enforced by a CI export matrix. Next: deepening live-service
+verification (Play uploads, workflow adoption by real games) and whatever
+footguns issue reports surface.
 
 ## Development
 

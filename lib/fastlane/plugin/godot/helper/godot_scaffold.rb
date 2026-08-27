@@ -33,13 +33,21 @@ module Fastlane
           desc 'Export from Godot and build a signed .ipa'
           lane :build do
             setup_ci if ENV['CI']
+
+            # Export first: it needs no credentials, so the Godot half of the
+            # pipeline is testable before an Apple developer account exists.
+            xcodeproj = godot_export(preset: 'iOS')
+
+            %w[ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_PATH].each do |name|
+              next unless ENV[name].to_s.strip.empty?
+              UI.user_error!("#{name} is not set. Copy fastlane/.env.template to fastlane/.env and fill in your App Store Connect API key. (The Godot export above already succeeded — credentials are only needed from here on, for signing and upload.)")
+            end
+
             app_store_connect_api_key(
               key_id: ENV.fetch('ASC_KEY_ID'),
               issuer_id: ENV.fetch('ASC_ISSUER_ID'),
               key_filepath: File.expand_path(ENV.fetch('ASC_KEY_PATH'))
             )
-
-            xcodeproj = godot_export(preset: 'iOS')
 
             # Reuse-or-create the distribution certificate and App Store
             # profile; classic (non-cloud) signing works with an App Manager
@@ -153,6 +161,24 @@ module Fastlane
         launcher_icons/main_192x192="res://app_icon.png"
         screen/immersive_mode=true
       TEXT
+
+      # Android export refuses projects without ETC2/ASTC texture compression,
+      # and Godot's own error suggests an editor-GUI fix. Add the setting to
+      # project.godot when absent. Returns true when a change was made.
+      def self.ensure_etc2_astc!(project_path)
+        project_file = File.join(project_path, 'project.godot')
+        content = File.read(project_file)
+        return false if content.include?('textures/vram_compression/import_etc2_astc=true')
+
+        setting = "textures/vram_compression/import_etc2_astc=true\n"
+        if content =~ /^\[rendering\]\n+/
+          content = content.sub(/^\[rendering\]\n+/) { |section| section + setting }
+        else
+          content << "\n[rendering]\n\n" << setting
+        end
+        File.write(project_file, content)
+        true
+      end
 
       # Minimal valid 1024x1024 opaque PNG (Apple rejects alpha in the
       # marketing icon): flat two-tone placeholder, obviously temporary.

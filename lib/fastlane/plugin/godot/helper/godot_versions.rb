@@ -62,6 +62,8 @@ module Fastlane
       end
 
       def self.from_git(project_path)
+        `git -C #{project_path.shellescape} rev-parse --git-dir 2>/dev/null`
+        UI.user_error!("git-derived versioning needs a git repository, and #{project_path} isn't inside one") unless $?.success?
         tag = `git -C #{project_path.shellescape} describe --tags --abbrev=0 2>/dev/null`.strip
         UI.user_error!('git-derived versioning needs at least one tag (e.g. v1.0.0)') if tag.empty?
         commit_count = `git -C #{project_path.shellescape} rev-list --count HEAD 2>/dev/null`.strip

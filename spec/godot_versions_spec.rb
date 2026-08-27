@@ -71,6 +71,13 @@ describe Fastlane::Helper::GodotVersions do
   end
 
   describe '.from_git' do
+    it 'names the real problem when outside a git repository' do
+      dir = Dir.mktmpdir
+      expect { described_class.from_git(dir) }
+        .to raise_error(FastlaneCore::Interface::FastlaneError, /needs a git repository/)
+      FileUtils.remove_entry(dir)
+    end
+
     it 'derives version from the latest tag and build from the commit count' do
       dir = Dir.mktmpdir
       system('git', 'init', '-q', dir)

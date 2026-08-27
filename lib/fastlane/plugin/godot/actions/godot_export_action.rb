@@ -27,7 +27,11 @@ module Fastlane
 
         if params[:import_first]
           UI.message('Importing project resources (stale import caches abort exports)…')
-          Actions.sh("#{godot.shellescape} --headless --path #{project_path.shellescape} --import")
+          # The import step streams hundreds of per-file progress lines; keep
+          # them out of the lane output unless asked (failures still raise
+          # with full output attached).
+          Actions.sh("#{godot.shellescape} --headless --path #{project_path.shellescape} --import", log: params[:verbose])
+          UI.message('Import done')
         end
 
         export_flag = params[:debug] ? '--export-debug' : '--export-release'
@@ -43,7 +47,9 @@ module Fastlane
         command << '--verbose' if params[:verbose]
 
         UI.message("Exporting preset '#{preset_name}' (#{preset[:platform]}) -> #{absolute_output}")
-        Actions.sh(command.join(' '))
+        # Per-file savepack progress stays hidden unless verbose; failures
+        # still raise with the full output attached.
+        Actions.sh(command.join(' '), log: params[:verbose])
 
         # Godot has historically exited 0 on some export failures; trust the artifact, not the exit code.
         UI.user_error!("Export claimed success but produced nothing at #{absolute_output}") unless File.exist?(absolute_output)

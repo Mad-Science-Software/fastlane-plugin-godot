@@ -73,6 +73,8 @@ track. See this example's `Fastfile`.
 
 | Symptom | Cause & answer |
 | --- | --- |
+| Export fails: "ETC2/ASTC texture compression is required for Android export" | Godot's message suggests an editor-GUI fix; headless, add `textures/vram_compression/import_etc2_astc=true` under `[rendering]` in `project.godot`. `godot_init` sets this for you since v0.2.1. |
+| Your `.ipa`/APK quietly contains `vendor/bundle` (the fastlane gems!) | With bundler's `path vendor/bundle`, Godot imports the gem files and packs them into the game. Drop a `.gdignore` into `vendor/` and `.bundle/` — `godot_init` does since v0.2.1. |
 | Gradle errors about Java versions | The JDK Godot uses must match what its Gradle template expects (JDK 17 for Godot 4.x). Set `java_sdk_path` in editor settings; don't rely on `JAVA_HOME`. |
 | `Export: Building of Android project failed` with the real error buried | Godot hides Gradle's actual failure in the verbose output — re-run the lane with `verbose: true` and read from the bottom up. |
 | AAB export fails asking for the build template | Gradle exports need the template installed in the project — pass `install_android_build_template: true` (the flag only works during an export). |

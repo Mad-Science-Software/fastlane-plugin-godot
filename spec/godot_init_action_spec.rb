@@ -23,12 +23,34 @@ describe Fastlane::Actions::GodotInitAction do
 
   it 'creates the full file set in an untouched project' do
     created = run_in(project)
-    expect(created).to contain_exactly(
+    expect(created).to include(
       'Gemfile', 'fastlane/Pluginfile', 'fastlane/Appfile', 'fastlane/Fastfile',
       'fastlane/.env.template', 'export_presets.cfg', 'build/.gdignore',
-      'app_icon.png', '.gitignore'
+      'vendor/.gdignore', '.bundle/.gdignore', 'app_icon.png', '.gitignore'
     )
     expect(File.read(File.join(project, 'export_presets.cfg'))).to include('name="iOS"', 'name="Android"')
+  end
+
+  it 'enables ETC2/ASTC texture compression (required for Android export)' do
+    created = run_in(project)
+    expect(created.join).to include('import_etc2_astc')
+    content = File.read(File.join(project, 'project.godot'))
+    expect(content).to include("[rendering]\n\ntextures/vram_compression/import_etc2_astc=true")
+  end
+
+  it 'inserts ETC2/ASTC into an existing [rendering] section without duplicating it' do
+    File.write(File.join(project, 'project.godot'), <<~GODOT)
+      config_version=5
+
+      [rendering]
+
+      renderer/rendering_method="gl_compatibility"
+    GODOT
+    run_in(project)
+    content = File.read(File.join(project, 'project.godot'))
+    expect(content.scan('import_etc2_astc').length).to eq(1)
+    expect(content).to include('renderer/rendering_method="gl_compatibility"')
+    expect(run_in(project).join).not_to include('import_etc2_astc')
   end
 
   it 'writes a valid opaque PNG icon' do

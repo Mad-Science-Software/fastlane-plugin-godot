@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.2.1 (2026-08-27)
+
+First-hour fixes from a blind third-party usability test:
+
+- `godot_init` enables `textures/vram_compression/import_etc2_astc` in
+  `project.godot` (Android export refuses projects without it, and Godot's
+  own error suggests an editor-GUI fix) and drops `.gdignore` files into
+  `vendor/` and `.bundle/` — without them, bundler's `path vendor/bundle`
+  setup got the fastlane gems packed into the exported game.
+- Scaffolded/example iOS lanes export before touching credentials, and a
+  missing `ASC_*` variable now produces "copy fastlane/.env.template…"
+  instead of a raw Ruby `KeyError`.
+- `godot_set_version from_git:` distinguishes "not a git repository" from
+  "no tags".
+- Import/export per-file progress noise is hidden unless `verbose: true`
+  (failures still raise with full output).
+- Docs: ETC2/ASTC and vendored-gems rows in the sharp-edges tables; stale
+  README roadmap paragraph and parity table refreshed.
+
 ## 0.2.0 (2026-08-27)
 
 Everything from the 0.1.1–0.1.5 development tags, published:

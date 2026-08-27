@@ -102,8 +102,8 @@ the knowledge and examples are not.
 | No engine-side package required | ❌ (needs Unity package) | ✅ | ahead |
 | Onboarding docs / example project | ❌ | ✅ | ahead |
 | Signing & upload guidance | ❌ | ✅ | ahead |
-| On RubyGems | ✅ | ❌ | v0.1.0 |
-| Version/build-number management | ✅ | ❌ | v0.2.0 |
-| Per-project engine resolution | ✅ (Unity Hub) | ⚠️ | v0.3.0 |
-| Android verified + documented | ✅ | ⚠️ (verified; docs pending) | v0.4.0 |
+| On RubyGems | ✅ | ✅ (0.2.0) | done |
+| Version/build-number management | ✅ | ✅ | done |
+| Per-project engine resolution | ✅ (Unity Hub) | ✅ | done |
+| Android verified + documented | ✅ | ✅ | done |
 | Years of production soak | ✅ (through ~2020) | ❌ | earned, not built |

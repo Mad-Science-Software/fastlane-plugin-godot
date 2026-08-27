@@ -6,6 +6,15 @@ platform :ios do
     # On CI runners, create the throwaway keychain certificate import needs.
     setup_ci if ENV['CI']
 
+    # Export first: it needs no credentials, so the Godot half of the
+    # pipeline is testable before an Apple developer account exists.
+    xcodeproj = godot_export(preset: 'iOS')
+
+    %w[ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_PATH].each do |name|
+      next unless ENV[name].to_s.strip.empty?
+      UI.user_error!("#{name} is not set. Copy fastlane/.env.template to fastlane/.env and fill in your App Store Connect API key (README step 1). (The Godot export above already succeeded — credentials are only needed from here on, for signing and upload.)")
+    end
+
     # App Store Connect API key: drives certificate/profile management and
     # the TestFlight upload. No Apple ID login, no two-factor prompts, works
     # in Continuous Integration. See the example README for how to get one.
@@ -14,8 +23,6 @@ platform :ios do
       issuer_id: ENV.fetch('ASC_ISSUER_ID'),
       key_filepath: File.expand_path(ENV.fetch('ASC_KEY_PATH'))
     )
-
-    xcodeproj = godot_export(preset: 'iOS')
 
     # Reuse-or-create the Apple Distribution certificate and App Store
     # provisioning profile. Idempotent; classic (non-cloud) signing, which

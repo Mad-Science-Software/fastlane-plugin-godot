@@ -29,7 +29,15 @@ module Fastlane
         write.call('fastlane/.env.template', scaffold::ENV_TEMPLATE)
         write.call('export_presets.cfg', scaffold::EXPORT_PRESETS)
         write.call('build/.gdignore', '')
+        # Bundler's common `path vendor/bundle` setup would otherwise get the
+        # fastlane gems imported and PACKED INTO THE GAME.
+        write.call('vendor/.gdignore', '')
+        write.call('.bundle/.gdignore', '')
         write.call('app_icon.png', scaffold.placeholder_icon_png, binary: true) if params[:icon]
+
+        if Helper::GodotScaffold.ensure_etc2_astc!(project_path)
+          created << 'project.godot (enabled textures/vram_compression/import_etc2_astc — required for Android export)'
+        end
 
         gitignore = File.join(project_path, '.gitignore')
         if File.exist?(gitignore)
