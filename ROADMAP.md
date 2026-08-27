@@ -20,10 +20,10 @@ deep documentation stay in v0.4.0.
 - [x] `godot_export` verified against an Android preset (APK at minimum)
       on a real game — Crunch, Godot 4.7.1: debug-signed arm64 APK,
       targetSdk 36, via `godot_export(preset: 'Android', debug: true)`
-- [ ] Publish `fastlane-plugin-godot` to RubyGems
-- [ ] Tag releases; start a CHANGELOG
-- [ ] Switch README / example Pluginfile to the gem install
-- [ ] Issue templates (bug report asks for Godot version, preset, full
+- [x] Publish `fastlane-plugin-godot` to RubyGems (0.1.0, 2026-08-26)
+- [x] Tag releases; start a CHANGELOG
+- [x] Switch README / example Pluginfile to the gem install
+- [x] Issue templates (bug report asks for Godot version, preset, full
       export output)
 
 ## v0.2.0 — Version & build-number management
