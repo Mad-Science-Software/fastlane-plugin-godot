@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.3 (2026-08-26) — GitHub only, unreleased on RubyGems
+
+- `godot_export` gains `install_android_build_template: true` for
+  Gradle-based Android exports (Android App Bundles) — Godot only installs
+  the project build template during an export invocation.
+- `examples/android-play/` — Google Play walkthrough: debug APK vs release
+  AAB, upload-keystore creation and Godot's `GODOT_ANDROID_KEYSTORE_RELEASE_*`
+  environment variables, Play service-account setup, internal-track upload
+  lane, and an Android sharp-edges table.
+
 ## 0.1.2 (2026-08-26) — GitHub only, unreleased on RubyGems
 
 - `godot_export` now verifies the binary's version against the engine

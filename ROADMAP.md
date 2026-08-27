@@ -62,13 +62,16 @@ Godot has no Hub, but the project declares its version — use it.
 The other half of mobile. The export action is platform-agnostic already;
 the knowledge and examples are not.
 
-- [ ] Verify `godot_export` against Android presets (Gradle builds, Android
-      App Bundle output)
-- [ ] `examples/android-play/`: keystore setup, Play service-account key,
-      `supply` upload to internal track
-- [ ] Sharp-edges table for the Android traps (JDK/Gradle version
-      alignment, target-API deadlines, texture-compression reimport)
-- [ ] Linux support verified (Android exports don't need macOS)
+- [x] Verify `godot_export` against Android presets (Gradle builds, Android
+      App Bundle output) — shipped v0.1.3: AAB verified on a real game via
+      `install_android_build_template: true`
+- [x] `examples/android-play/`: keystore setup, Play service-account key,
+      `supply` upload to internal track (shipped v0.1.3; the upload lane is
+      documented but unverified against a live Play app — needs a Play
+      service account)
+- [x] Sharp-edges table for the Android traps (shipped v0.1.3)
+- [ ] Linux support verified — folded into the multi-version CI matrix
+      (v0.5.0 scope): Linux runners exercise Android export there
 
 ## v0.5.0 — Continuous Integration templates
 

@@ -1,0 +1,23 @@
+default_platform(:android)
+
+platform :android do
+  desc 'Debug-signed APK for sideloading onto a device'
+  lane :build do
+    godot_export(preset: 'Android', debug: true)
+  end
+
+  desc 'Release AAB, uploaded to the Play internal testing track'
+  lane :internal do
+    # Release signing: Godot reads GODOT_ANDROID_KEYSTORE_RELEASE_PATH /
+    # _USER / _PASSWORD from the environment (fastlane/.env).
+    aab = godot_export(
+      preset: 'Android AAB',
+      install_android_build_template: true
+    )
+    upload_to_play_store(
+      aab: aab,
+      track: 'internal',
+      json_key: File.expand_path(ENV.fetch('PLAY_JSON_KEY_PATH'))
+    )
+  end
+end

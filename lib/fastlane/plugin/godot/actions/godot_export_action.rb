@@ -34,10 +34,12 @@ module Fastlane
         command = [
           godot.shellescape,
           '--headless',
-          '--path', project_path.shellescape,
-          export_flag, preset_name.shellescape,
-          absolute_output.shellescape
+          '--path', project_path.shellescape
         ]
+        # Gradle-based Android exports (AABs) need the build template installed
+        # into the project; Godot only installs it during an export invocation.
+        command << '--install-android-build-template' if params[:install_android_build_template]
+        command += [export_flag, preset_name.shellescape, absolute_output.shellescape]
         command << '--verbose' if params[:verbose]
 
         UI.message("Exporting preset '#{preset_name}' (#{preset[:platform]}) -> #{absolute_output}")
@@ -101,6 +103,11 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :verbose,
                                        env_name: 'FL_GODOT_VERBOSE',
                                        description: 'Pass --verbose to Godot',
+                                       type: Boolean,
+                                       default_value: false),
+          FastlaneCore::ConfigItem.new(key: :install_android_build_template,
+                                       env_name: 'FL_GODOT_INSTALL_ANDROID_BUILD_TEMPLATE',
+                                       description: "Install the project's Android Gradle build template during export (needed for Android App Bundle presets)",
                                        type: Boolean,
                                        default_value: false),
           FastlaneCore::ConfigItem.new(key: :skip_version_check,

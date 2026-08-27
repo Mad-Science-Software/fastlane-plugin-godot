@@ -13,6 +13,11 @@ describe Fastlane::Actions::GodotExportAction do
       required = described_class.available_options.reject(&:optional).reject { |o| o.default_value || o.default_value == false }
       expect(required.map(&:key)).to eq([:preset])
     end
+
+    it 'defaults the Android build template flag off' do
+      option = described_class.available_options.find { |o| o.key == :install_android_build_template }
+      expect(option.default_value).to be(false)
+    end
   end
 
   describe '#run' do

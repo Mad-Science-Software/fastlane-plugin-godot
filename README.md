@@ -5,11 +5,13 @@ games to mobile app stores: headless exports with real diagnostics, composing
 with the fastlane actions (`gym`, `pilot`, `cert`, `sigh`, `supply`, …) that
 already handle signing and store upload.
 
-**New to fastlane?** Start with the
-[Godot → TestFlight from-zero walkthrough](examples/ios-testflight/) — a
-complete copy-paste setup including Ruby installation, the App Store Connect
-API key, Godot project prep, and a working Fastfile. First setup ~30 minutes;
-~4 minutes per release after that.
+**New to fastlane?** Start with the from-zero walkthroughs — complete
+copy-paste setups including Ruby installation, credentials, Godot project
+prep, and working Fastfiles (first setup ~30 minutes; minutes per release
+after):
+
+- [Godot → TestFlight (iOS)](examples/ios-testflight/)
+- [Godot → Google Play (Android)](examples/android-play/)
 
 **Already using fastlane?**
 
