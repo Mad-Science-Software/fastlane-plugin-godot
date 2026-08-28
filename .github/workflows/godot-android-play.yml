@@ -45,6 +45,11 @@ jobs:
         working-directory: ${{ inputs.project-dir }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history: git-derived build numbers read 1 on a shallow
+          # clone, and Play rejects reused version codes just like
+          # TestFlight rejects reused build numbers.
+          fetch-depth: 0
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'

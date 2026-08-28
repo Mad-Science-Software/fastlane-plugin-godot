@@ -55,6 +55,11 @@ jobs:
         working-directory: ${{ inputs.project-dir }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history: godot_set_version's git-derived build number uses
+          # `git rev-list --count HEAD`, which reads 1 on a shallow clone —
+          # TestFlight then rejects the upload as a reused build number.
+          fetch-depth: 0
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
