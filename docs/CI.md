@@ -64,11 +64,16 @@ release-keystore credentials from the `GODOT_ANDROID_KEYSTORE_RELEASE_*`
 environment variables — fed from secrets, with the keystore itself stored
 base64-encoded in `KEYSTORE_BASE64`.
 
-One Godot-specific wrinkle: Godot needs `java_sdk_path` and
-`android_sdk_path` in its *editor settings* on the runner. The first
-Gradle export will fail without them; add a pre-step writing
-`~/.config/godot/editor_settings-4.<minor>.tres` if you hit it (and open an
-issue — making the plugin handle this is on the roadmap).
+One Godot-specific wrinkle, which the reusable workflow handles: Godot
+reads `java_sdk_path` and `android_sdk_path` from its *editor settings*
+file on the runner, not from `JAVA_HOME` / `ANDROID_HOME`, and a Gradle
+export fails without them. `godot-android-play.yml` writes
+`~/.config/godot/editor_settings-4.<minor>.tres` from those two variables
+before running the lane (the minor comes from the `godot-version` input).
+On a self-hosted runner, install a JDK 17 and the Android SDK and export
+both variables; the step fails early with a message if either is unset.
+If you drive `godot_export` from your own workflow instead of the reusable
+one, copy that step.
 
 ## The plugin's own smoke test — a Godot version matrix
 

@@ -65,6 +65,27 @@ jobs:
           version: ${{ inputs.godot-version }}
           use-dotnet: false
           include-templates: true
+      # Godot reads the JDK and Android SDK locations from its *editor
+      # settings* file, not from JAVA_HOME / ANDROID_HOME, and a Gradle
+      # export with neither set fails. The file is per engine minor.
+      - name: Configure Godot Android editor settings
+        run: |
+          if [ -z "$JAVA_HOME" ] || [ -z "$ANDROID_HOME" ]; then
+            echo "::error::JAVA_HOME and ANDROID_HOME must be set (GitHub's Ubuntu images set both; a self-hosted runner needs the JDK and Android SDK installed and exported)."
+            exit 1
+          fi
+          minor="$(printf '%s' "$GODOT_VERSION" | cut -d. -f1,2)"
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-${minor}.tres" <<SETTINGS
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/java_sdk_path = "$JAVA_HOME"
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          SETTINGS
+          echo "Wrote editor_settings-${minor}.tres (JDK $JAVA_HOME, SDK $ANDROID_HOME)"
+        env:
+          GODOT_VERSION: ${{ inputs.godot-version }}
       - name: Write signing material
         run: |
           printf '%s' "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
