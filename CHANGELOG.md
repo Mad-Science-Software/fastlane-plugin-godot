@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.3.0 (unreleased)
+
+The Android half, verified live: a real game (crunch) uploaded to the Play
+internal track from a laptop and then from a GitHub Ubuntu runner through
+`godot-android-play.yml`.
+
+- `godot_export` removes `.import` sidecars under the Android build
+  template's `res/` before every Android export. Godot 4.7 installs the
+  template with no `.gdignore` (and the install wipes `android/`, so one
+  placed there doesn't survive); any later editor or `--import` pass
+  sidecars the template's drawables and Gradle's resource merger rejects
+  them.
+- `godot-android-play.yml` writes Godot's `java_sdk_path` /
+  `android_sdk_path` editor settings on the runner — Godot reads them from
+  its editor settings file, not from `JAVA_HOME` / `ANDROID_HOME`, and a
+  Gradle export fails without them. Fails early with a message on runners
+  missing either.
+- Android example: `package_name` in the Appfile (`supply` reads the
+  Android id from that key, not `app_identifier`), `skip_upload_*` flags
+  until store metadata lives in the repo, the single-keystore-password
+  rule, and the newer Play Console flow — no "API access" page; invite the
+  service account under Users and permissions, enable the Play Android
+  Developer API by hand, and the org-policy override needed to mint a key
+  on secure-by-default organisations.
+- `docs/BACKLOG.md`: known gaps waiting on a fix, linked from the README.
+
 ## 0.2.2 (2026-08-27)
 
 Documentation release, after verifying the full CI pipeline live (a real

@@ -76,4 +76,29 @@ describe Fastlane::Helper::GodotHelper do
       file.unlink
     end
   end
+
+  describe '.clear_android_resource_sidecars' do
+    it 'removes .import sidecars under the build template resources only' do
+      Dir.mktmpdir do |project|
+        drawable = File.join(project, 'android', 'build', 'res', 'drawable')
+        asset_pack = File.join(project, 'android', 'build', 'assetPackInstallTime', 'src', 'main', 'assets')
+        FileUtils.mkdir_p(drawable)
+        FileUtils.mkdir_p(asset_pack)
+        File.write(File.join(drawable, 'splash_icon.webp'), '')
+        File.write(File.join(drawable, 'splash_icon.webp.import'), '')
+        File.write(File.join(asset_pack, 'app_icon.png.import'), '')
+
+        expect(described_class.clear_android_resource_sidecars(project)).to eq(1)
+        expect(File.exist?(File.join(drawable, 'splash_icon.webp'))).to be(true)
+        expect(File.exist?(File.join(drawable, 'splash_icon.webp.import'))).to be(false)
+        expect(File.exist?(File.join(asset_pack, 'app_icon.png.import'))).to be(true)
+      end
+    end
+
+    it 'is a no-op without an Android build template' do
+      Dir.mktmpdir do |project|
+        expect(described_class.clear_android_resource_sidecars(project)).to eq(0)
+      end
+    end
+  end
 end
