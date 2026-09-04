@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 (unreleased)
+## 0.3.0 (2026-09-04)
 
 The Android half, verified live: a real game (crunch) uploaded to the Play
 internal track from a laptop and then from a GitHub Ubuntu runner through
