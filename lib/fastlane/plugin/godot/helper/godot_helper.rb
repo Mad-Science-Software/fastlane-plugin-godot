@@ -63,6 +63,20 @@ module Fastlane
         preset
       end
 
+      # Godot 4.7 installs the Android Gradle build template with no
+      # .gdignore in android/ (and the install wipes android/, so one
+      # placed there doesn't survive). Any editor or --import pass after
+      # that writes *.import sidecars next to the template's drawables,
+      # and Gradle's resource merger rejects them ("The file name must end
+      # with .xml or .png"). Only res/ is affected — the export itself
+      # legitimately packs the game's own sidecars into the asset-pack
+      # directories. Returns how many were removed.
+      def self.clear_android_resource_sidecars(project_path)
+        sidecars = Dir.glob(File.join(project_path, 'android', 'build', 'res', '**', '*.import'))
+        sidecars.each { |path| File.delete(path) }
+        sidecars.size
+      end
+
       # The template archive each platform's export requires, keyed by the
       # platform string Godot writes into export_presets.cfg.
       PLATFORM_TEMPLATE_FILES = {

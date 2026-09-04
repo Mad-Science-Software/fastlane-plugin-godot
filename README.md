@@ -75,6 +75,8 @@ a real game with it:
 - runs a headless `--import` first — a stale import cache aborts Godot
   exports with a crash-lookalike exit 134
 - creates the output directory (Godot errors rather than create it)
+- for Android presets, removes `.import` sidecars Godot leaves inside the
+  Gradle build template's `res/` — Gradle's resource merger fails on them
 - confirms the artifact was actually produced — Godot has historically
   exited 0 on some failed exports
 
