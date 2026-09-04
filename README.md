@@ -174,7 +174,8 @@ bundle exec rake   # runs the RSpec suite
 ```
 
 Issues and pull requests welcome — especially reports of export footguns
-this plugin doesn't yet catch.
+this plugin doesn't yet catch. Known ones waiting on a fix are in
+[`docs/BACKLOG.md`](docs/BACKLOG.md).
 
 ## License
 
