@@ -34,6 +34,11 @@ module Fastlane
           UI.message('Import done')
         end
 
+        if preset[:platform] == 'Android'
+          removed = Helper::GodotHelper.clear_android_resource_sidecars(project_path)
+          UI.message("Removed #{removed} stale .import sidecar(s) from android/build/res (Gradle rejects them)") if removed.positive?
+        end
+
         export_flag = params[:debug] ? '--export-debug' : '--export-release'
         command = [
           godot.shellescape,

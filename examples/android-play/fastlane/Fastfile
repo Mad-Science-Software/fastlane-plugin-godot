@@ -17,7 +17,14 @@ platform :android do
     upload_to_play_store(
       aab: aab,
       track: 'internal',
-      json_key: File.expand_path(ENV.fetch('PLAY_JSON_KEY_PATH'))
+      json_key: File.expand_path(ENV.fetch('PLAY_JSON_KEY_PATH')),
+      # Without a fastlane/metadata directory, supply must be told not to
+      # look for listing text and images; drop these once you keep store
+      # metadata in the repo.
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
     )
   end
 end

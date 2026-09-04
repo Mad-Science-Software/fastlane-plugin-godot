@@ -75,6 +75,8 @@ a real game with it:
 - runs a headless `--import` first — a stale import cache aborts Godot
   exports with a crash-lookalike exit 134
 - creates the output directory (Godot errors rather than create it)
+- for Android presets, removes `.import` sidecars Godot leaves inside the
+  Gradle build template's `res/` — Gradle's resource merger fails on them
 - confirms the artifact was actually produced — Godot has historically
   exited 0 on some failed exports
 
@@ -174,7 +176,8 @@ bundle exec rake   # runs the RSpec suite
 ```
 
 Issues and pull requests welcome — especially reports of export footguns
-this plugin doesn't yet catch.
+this plugin doesn't yet catch. Known ones waiting on a fix are in
+[`docs/BACKLOG.md`](docs/BACKLOG.md).
 
 ## License
 

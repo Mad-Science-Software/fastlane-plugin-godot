@@ -33,6 +33,10 @@ keytool -genkeypair -v -keystore ~/keystores/upload.keystore \
   -alias upload -keyalg RSA -keysize 2048 -validity 10000
 ```
 
+When `keytool` asks for a key password, reuse the store password: Godot's
+release-signing configuration has a single password field, so a key whose
+password differs from its store's cannot be used.
+
 Godot reads release-signing configuration from environment variables in
 Continuous Integration (CI) and headless use — put these in
 `fastlane/.env` (gitignored; see the template):
@@ -51,14 +55,30 @@ key is not. Opt in.
 ## 3. Play Console service account (one time)
 
 `upload_to_play_store` authenticates with a Google Cloud service-account
-JSON key:
+JSON key. The Play Console no longer has a "link a Cloud project" step
+(older guides say *Setup → API access*; that page is gone), so:
 
-1. Play Console → **Setup → API access** → link a Google Cloud project.
-2. In Google Cloud Console: create a service account, grant it nothing
-   cloud-side, create a **JSON key**, download it (store outside git).
-3. Back in Play Console: grant that service account **Release manager**
-   permissions on your app.
-4. `PLAY_JSON_KEY_PATH=...` in `fastlane/.env`.
+1. In Google Cloud Console, in any project you own: **IAM & Admin →
+   Service Accounts → Create**. Grant it no Cloud roles — it only needs
+   Play permissions.
+2. Same project: **APIs & Services → Enable APIs** → *Google Play Android
+   Developer API*. Play used to enable this for a linked project; now it's
+   manual.
+3. Service account → **Keys → Add key → JSON**. Download it once and store
+   it outside git. On an organisation created after 2024, Google's
+   secure-by-default policy `iam.disableServiceAccountKeyCreation` blocks
+   this: as an org admin, grant yourself *Organization Policy
+   Administrator* at the organisation level, override that policy to *not
+   enforced* on the one project, mint the key, then remove the override
+   (existing keys keep working).
+4. Play Console → **Users and permissions → Invite new users** → the
+   service account's email (`…@…iam.gserviceaccount.com`) → *App
+   permissions* → your app → **Release manager** (or the minimal pair:
+   release to testing tracks + view app information). Service accounts
+   accept automatically; permissions can take a few minutes to propagate.
+5. `PLAY_JSON_KEY_PATH=...` in `fastlane/.env`, and `package_name` in
+   `fastlane/Appfile` — `supply` reads the Android id from that key, not
+   from `app_identifier`.
 
 ## 4. Ship
 
@@ -82,3 +102,6 @@ track. See this example's `Fastfile`.
 | Textures silently uncompressed / bloated after enabling `import_etc2_astc` | Known engine bug: the setting doesn't reimport existing textures and the export dialog's "Fix Import" is broken (godot#94882). Delete `.godot/imported` and reimport. |
 | `cannot connect to daemon at tcp:5037` during export | Harmless — Godot probing for a connected device via the Android Debug Bridge (adb). Not an export failure. |
 | Play Console refuses the very first AAB from the API | The *first* upload for a new app must be done manually in the Play Console UI; the API works from the second one on. |
+| Gradle: `…/android/build/res/…/*.import: The file name must end with .xml or .png` | Godot 4.7 installs the build template with no `.gdignore`, so an editor session or `--import` after the install sidecars the template's drawables (a `.gdignore` in `android/` does not survive the template install). `godot_export` removes them before every Android export since v0.3.0. |
+| A third-party export plugin's assets fail the same way, or its notifications never post | Plugins that copy an assets directory into the Android project at export (e.g. `assets/NotificationSchedulerPlugin/android`) need that directory `.gdignore`d — the plugin copies it with `DirAccess`, Godot must not import it. Missing the directory entirely is worse: no small icon, so no notification can post. |
+| Upload key rejected, or Godot asks for a password it never reads | Godot has one keystore password for release signing. Generate the upload key with `-keypass` equal to `-storepass` (the `keytool` line above does). |
