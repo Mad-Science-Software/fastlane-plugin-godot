@@ -8,6 +8,7 @@
 #       with:
 #         project-dir: .            # directory containing project.godot + Gemfile
 #         godot-version: '4.7.1'
+#         runs-on: '["self-hosted", "macOS"]'   # optional; default macos-latest
 #       secrets:
 #         ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
 #         ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
@@ -33,6 +34,13 @@ on:
         description: 'Override the Matchfile git_url (use the ssh form with a deploy key)'
         type: string
         default: ''
+      runs-on:
+        description: >-
+          Runner for the build job: a GitHub-hosted label, or a JSON array of
+          labels for a self-hosted Mac (macOS minutes cost ten times Linux
+          ones), e.g. '["self-hosted", "macOS"]'
+        type: string
+        default: 'macos-latest'
     secrets:
       ASC_KEY_ID:
         required: true
@@ -49,7 +57,8 @@ on:
 
 jobs:
   build-and-upload:
-    runs-on: macos-latest
+    # A JSON array input becomes a label list; a bare label passes through.
+    runs-on: ${{ startsWith(inputs.runs-on, '[') && fromJSON(inputs.runs-on) || inputs.runs-on }}
     defaults:
       run:
         working-directory: ${{ inputs.project-dir }}
@@ -60,12 +69,18 @@ jobs:
           # `git rev-list --count HEAD`, which reads 1 on a shallow clone —
           # TestFlight then rejects the upload as a reused build number.
           fetch-depth: 0
+      # setup-ruby's prebuilt Rubies embed /Users/runner/hostedtoolcache and
+      # assume GitHub's image; a self-hosted Mac uses the Ruby it has.
       - uses: ruby/setup-ruby@v1
+        if: runner.environment == 'github-hosted'
         with:
           ruby-version: '3.4'
           bundler: latest
           working-directory: ${{ inputs.project-dir }}
           bundler-cache: true
+      - name: Install gems with the runner's own Ruby
+        if: runner.environment == 'self-hosted'
+        run: bundle install
       - uses: chickensoft-games/setup-godot@v2
         with:
           version: ${{ inputs.godot-version }}
