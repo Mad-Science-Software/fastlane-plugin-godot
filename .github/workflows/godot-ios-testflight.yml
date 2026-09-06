@@ -69,12 +69,18 @@ jobs:
           # `git rev-list --count HEAD`, which reads 1 on a shallow clone —
           # TestFlight then rejects the upload as a reused build number.
           fetch-depth: 0
+      # setup-ruby's prebuilt Rubies embed /Users/runner/hostedtoolcache and
+      # assume GitHub's image; a self-hosted Mac uses the Ruby it has.
       - uses: ruby/setup-ruby@v1
+        if: runner.environment == 'github-hosted'
         with:
           ruby-version: '3.4'
           bundler: latest
           working-directory: ${{ inputs.project-dir }}
           bundler-cache: true
+      - name: Install gems with the runner's own Ruby
+        if: runner.environment == 'self-hosted'
+        run: bundle install
       - uses: chickensoft-games/setup-godot@v2
         with:
           version: ${{ inputs.godot-version }}
